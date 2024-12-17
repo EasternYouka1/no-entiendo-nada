@@ -6,108 +6,162 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Información de contacto</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     {{ form.media }}
     <style>
+        :root {
+            --primary-color: #4A90E2;
+            --secondary-color: #F5F7FA;
+            --accent-color: #2ECC71;
+            --text-color: #2C3E50;
+            --border-radius: 15px;
+        }
+
         body {
-            background-color: #f8f9fa;
+            background: linear-gradient(135deg, #f6f9fc 0%, #edf2f7 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
             padding: 20px;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
         
         .wrapper {
+            width: 100%;
             max-width: 800px;
-            margin: 0 auto;
             background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
         }
-        
-        .form-row {
-            margin-bottom: 20px;
-        }
-        
+
         .wizard > .steps {
-            margin-bottom: 30px;
-        }
-        
-        .wizard > .steps .current-info {
-            display: none;
+            margin-bottom: 40px;
         }
         
         .wizard > .steps ul {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             padding: 0;
-            margin: 0;
-            list-style: none;
-        }
-        
-        .wizard > .steps li {
-            flex: 1;
-            max-width: 200px;
-            text-align: center;
+            margin: 0 auto;
+            max-width: 600px;
             position: relative;
         }
         
-        .wizard > .steps li:not(:last-child):after {
+        .wizard > .steps ul::before {
             content: '';
             position: absolute;
             top: 50%;
+            left: 0;
             right: 0;
-            width: 100%;
-            height: 2px;
+            height: 3px;
             background: #e9ecef;
             transform: translateY(-50%);
+            z-index: 1;
+        }
+        
+        .wizard > .steps li {
+            position: relative;
+            z-index: 2;
         }
         
         .wizard > .steps a {
-            display: block;
-            width: 40px;
-            height: 40px;
-            line-height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            border: 2px solid #e9ecef;
             background: white;
+            border: 3px solid #e9ecef;
             color: #495057;
             text-decoration: none;
-            margin: 0 auto;
+            transition: all 0.3s ease;
             position: relative;
-            z-index: 1;
         }
         
         .wizard > .steps .checked a,
         .wizard > .steps .current a {
-            background: #007bff;
+            background: var(--primary-color);
+            border-color: var(--primary-color);
             color: white;
-            border-color: #007bff;
+            transform: scale(1.1);
         }
-        
+
         .form-control {
-            height: calc(1.5em + 1rem + 2px);
-            padding: 0.5rem 1rem;
+            border: 2px solid #edf2f7;
+            border-radius: 12px;
+            padding: 12px 20px;
+            height: auto;
             font-size: 1rem;
-            border-radius: 0.3rem;
+            transition: all 0.3s ease;
+            background-color: #f8fafc;
         }
         
-        select.form-control {
-            padding-right: 2.5rem;
-            background-position: right 0.75rem center;
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+            background-color: white;
         }
-        
+
+        .form-row {
+            margin-bottom: 25px;
+        }
+
         .invalid-feedback {
-            display: block;
-            margin-top: 0.5rem;
+            color: #e74c3c;
+            font-size: 0.875rem;
+            margin-top: 8px;
         }
-        
+
         .success {
-            text-align: center;
-            color: #28a745;
-            font-size: 1.25rem;
-            margin-top: 20px;
+            color: var(--accent-color);
+            font-size: 1.5rem;
+            margin-top: 30px;
+            font-weight: 600;
         }
-        
-        /* SVG check animation */
+
+        /* Botones personalizados */
+        .actions {
+            margin-top: 40px;
+        }
+
+        .actions ul {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            list-style: none;
+            padding: 0;
+        }
+
+        .actions a {
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .actions a[href="#next"],
+        .actions a[href="#finish"] {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .actions a[href="#previous"] {
+            background: var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        .actions a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Animación del check */
         .path {
             stroke-dasharray: 1000;
             stroke-dashoffset: 0;
@@ -123,21 +177,42 @@
         }
         
         @keyframes dash {
-            0% {
-                stroke-dashoffset: 1000;
-            }
-            100% {
-                stroke-dashoffset: 0;
-            }
+            0% { stroke-dashoffset: 1000; }
+            100% { stroke-dashoffset: 0; }
         }
         
         @keyframes dash-check {
-            0% {
-                stroke-dashoffset: -100;
-            }
-            100% {
-                stroke-dashoffset: 900;
-            }
+            0% { stroke-dashoffset: -100; }
+            100% { stroke-dashoffset: 900; }
+        }
+
+        /* Mensajes de alerta */
+        .alert {
+            border-radius: var(--border-radius);
+            border: none;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        /* Títulos de sección */
+        h4 {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 30px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        h4::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--primary-color);
+            border-radius: 3px;
         }
     </style>
 </head>
@@ -147,7 +222,7 @@
             {% csrf_token %}
             <div id="wizard">
                 <!-- SECTION 1 -->
-                <h4>Información Personal</h4>
+                <h4><i class="fas fa-user-circle mr-2"></i>Información Personal</h4>
                 <section>
                     {% if messages %}
                     <div class="messages mb-4">
@@ -164,6 +239,7 @@
                             {{ form.edad }}
                             {% if form.edad.errors %}
                             <div class="invalid-feedback">
+                                <i class="fas fa-exclamation-circle mr-1"></i>
                                 {{ form.edad.errors }}
                             </div>
                             {% endif %}
@@ -175,6 +251,7 @@
                             {{ form.genero }}
                             {% if form.genero.errors %}
                             <div class="invalid-feedback">
+                                <i class="fas fa-exclamation-circle mr-1"></i>
                                 {{ form.genero.errors }}
                             </div>
                             {% endif %}
@@ -182,21 +259,20 @@
                     </div>
 
                     <div class="form-row">
-                        <div class="col-12">
+                        <div class="col-md-6">
                             {{ form.peso }}
                             {% if form.peso.errors %}
                             <div class="invalid-feedback">
+                                <i class="fas fa-exclamation-circle mr-1"></i>
                                 {{ form.peso.errors }}
                             </div>
                             {% endif %}
                         </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="col-12">
+                        <div class="col-md-6">
                             {{ form.altura }}
                             {% if form.altura.errors %}
                             <div class="invalid-feedback">
+                                <i class="fas fa-exclamation-circle mr-1"></i>
                                 {{ form.altura.errors }}
                             </div>
                             {% endif %}
@@ -205,13 +281,14 @@
                 </section>
 
                 <!-- SECTION 2 -->
-                <h4>Información Alimenticia</h4>
+                <h4><i class="fas fa-utensils mr-2"></i>Información Alimenticia</h4>
                 <section>
                     <div class="form-row">
                         <div class="col-12">
                             {{ form.preferencias_alimentarias }}
                             {% if form.preferencias_alimentarias.errors %}
                             <div class="invalid-feedback">
+                                <i class="fas fa-exclamation-circle mr-1"></i>
                                 {{ form.preferencias_alimentarias.errors }}
                             </div>
                             {% endif %}
@@ -219,21 +296,20 @@
                     </div>
 
                     <div class="form-row">
-                        <div class="col-12">
+                        <div class="col-md-6">
                             {{ form.comidas_dia }}
                             {% if form.comidas_dia.errors %}
                             <div class="invalid-feedback">
+                                <i class="fas fa-exclamation-circle mr-1"></i>
                                 {{ form.comidas_dia.errors }}
                             </div>
                             {% endif %}
                         </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="col-12">
+                        <div class="col-md-6">
                             {{ form.litros_dia }}
                             {% if form.litros_dia.errors %}
                             <div class="invalid-feedback">
+                                <i class="fas fa-exclamation-circle mr-1"></i>
                                 {{ form.litros_dia.errors }}
                             </div>
                             {% endif %}
@@ -245,6 +321,7 @@
                             {{ form.nivel_actividad }}
                             {% if form.nivel_actividad.errors %}
                             <div class="invalid-feedback">
+                                <i class="fas fa-exclamation-circle mr-1"></i>
                                 {{ form.nivel_actividad.errors }}
                             </div>
                             {% endif %}
@@ -253,14 +330,14 @@
                 </section>
 
                 <!-- SECTION 3 -->
-                <h4>Confirmación</h4>
+                <h4><i class="fas fa-check-circle mr-2"></i>Confirmación</h4>
                 <section>
                     <div class="text-center">
                         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2" width="100" height="100">
-                            <circle class="path circle" fill="none" stroke="#73AF55" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
-                            <polyline class="path check" fill="none" stroke="#73AF55" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5"/>
+                            <circle class="path circle" fill="none" stroke="#2ECC71" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
+                            <polyline class="path check" fill="none" stroke="#2ECC71" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5"/>
                         </svg>
-                        <p class="success">¡Eso era todo, hemos actualizado las preferencias!</p>
+                        <p class="success">¡Perfecto! Tus preferencias han sido actualizadas</p>
                     </div>
                 </section>
             </div>
@@ -278,9 +355,9 @@
                 bodyTag: "section",
                 transitionEffect: "fade",
                 enableAllSteps: true,
-                transitionEffectSpeed: 500,
+                transitionEffectSpeed: 300,
                 labels: {
-                    finish: "Vamos a chatear",
+                    finish: "¡Comenzar!",
                     next: "Siguiente",
                     previous: "Anterior"
                 },
@@ -317,13 +394,10 @@
                     var form = $(this).closest('form');
                     form.submit();
                     return true;
+                },
+                onStepChanged: function (event, currentIndex, priorIndex) {
+                    $('.wizard > .steps .current').prevAll().addClass('checked');
                 }
-            });
-
-            $('.wizard > .steps li a').click(function(){
-                $(this).parent().addClass('checked');
-                $(this).parent().prevAll().addClass('checked');
-                $(this).parent().nextAll().removeClass('checked');
             });
 
             // Style form controls

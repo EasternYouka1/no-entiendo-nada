@@ -7,6 +7,7 @@ from .models import MetaNutricional
 from logros.models import Logro
 from dieta.models import Comida
 from .forms import MetaNutricionalForm
+from info_usuarios.models import info_usuario
 
 @login_required
 def metas_view(request):
@@ -32,6 +33,7 @@ def metas_view(request):
 @login_required
 def dashboard_view(request):
     metas = MetaNutricional.objects.get(usuario=request.user)
+    user_info = info_usuario.objects.get(user=request.user)
     comidas_diarias = Comida.objects.filter(usuario=request.user, fecha=date.today())
     totales = comidas_diarias.aggregate(
         calorias=Sum('calorias'),
@@ -59,12 +61,13 @@ def dashboard_view(request):
         # Eliminar los alimentos del día para reiniciar el conteo
         comidas_diarias.delete()
 
-        # Verificar si se han completado 3 veces
-        if metas.veces_completadas % 3 == 0:
+        # Verificar si se han completado 3 veces y si el primer login ha sido completado
+        if metas.veces_completadas % 3 == 0 and not user_info.primer_login:
             messages.success(request, '¡Has alcanzado un logro por completar tu objetivo diario 3 veces!')
-            logro_tres_veces = Logro.objects.get(nombre='Third Strike')
-            logro_tres_veces.obtenido = True
-            logro_tres_veces.save()
+            logro_tres_veces, _ = Logro.objects.get_or_create(nombre='Third Strike')
+            if not logro_tres_veces.obtenido:
+                logro_tres_veces.obtenido = True
+                logro_tres_veces.save()
 
     # Verificar si se ha completado la meta diaria de carbohidratos
     if carbohidratos_totales >= metas.carbohidratos_diarios:
