@@ -1,0 +1,335 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Información de contacto</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    {{ form.media }}
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        
+        .wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .form-row {
+            margin-bottom: 20px;
+        }
+        
+        .wizard > .steps {
+            margin-bottom: 30px;
+        }
+        
+        .wizard > .steps .current-info {
+            display: none;
+        }
+        
+        .wizard > .steps ul {
+            display: flex;
+            justify-content: center;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+        
+        .wizard > .steps li {
+            flex: 1;
+            max-width: 200px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .wizard > .steps li:not(:last-child):after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 0;
+            width: 100%;
+            height: 2px;
+            background: #e9ecef;
+            transform: translateY(-50%);
+        }
+        
+        .wizard > .steps a {
+            display: block;
+            width: 40px;
+            height: 40px;
+            line-height: 38px;
+            border-radius: 50%;
+            border: 2px solid #e9ecef;
+            background: white;
+            color: #495057;
+            text-decoration: none;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .wizard > .steps .checked a,
+        .wizard > .steps .current a {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        
+        .form-control {
+            height: calc(1.5em + 1rem + 2px);
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            border-radius: 0.3rem;
+        }
+        
+        select.form-control {
+            padding-right: 2.5rem;
+            background-position: right 0.75rem center;
+        }
+        
+        .invalid-feedback {
+            display: block;
+            margin-top: 0.5rem;
+        }
+        
+        .success {
+            text-align: center;
+            color: #28a745;
+            font-size: 1.25rem;
+            margin-top: 20px;
+        }
+        
+        /* SVG check animation */
+        .path {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 0;
+        }
+        
+        .circle {
+            animation: dash 0.9s ease-in-out;
+        }
+        
+        .check {
+            animation: dash-check 0.9s 0.35s ease-in-out forwards;
+            stroke-dashoffset: -100;
+        }
+        
+        @keyframes dash {
+            0% {
+                stroke-dashoffset: 1000;
+            }
+            100% {
+                stroke-dashoffset: 0;
+            }
+        }
+        
+        @keyframes dash-check {
+            0% {
+                stroke-dashoffset: -100;
+            }
+            100% {
+                stroke-dashoffset: 900;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <form method="POST" action="{% url 'info_usuarios:primer_setup' %}" id="setup-form">
+            {% csrf_token %}
+            <div id="wizard">
+                <!-- SECTION 1 -->
+                <h4>Información Personal</h4>
+                <section>
+                    {% if messages %}
+                    <div class="messages mb-4">
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <div class="form-row">
+                        <div class="col-12">
+                            {{ form.edad }}
+                            {% if form.edad.errors %}
+                            <div class="invalid-feedback">
+                                {{ form.edad.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col-12">
+                            {{ form.genero }}
+                            {% if form.genero.errors %}
+                            <div class="invalid-feedback">
+                                {{ form.genero.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col-12">
+                            {{ form.peso }}
+                            {% if form.peso.errors %}
+                            <div class="invalid-feedback">
+                                {{ form.peso.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col-12">
+                            {{ form.altura }}
+                            {% if form.altura.errors %}
+                            <div class="invalid-feedback">
+                                {{ form.altura.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 2 -->
+                <h4>Información Alimenticia</h4>
+                <section>
+                    <div class="form-row">
+                        <div class="col-12">
+                            {{ form.preferencias_alimentarias }}
+                            {% if form.preferencias_alimentarias.errors %}
+                            <div class="invalid-feedback">
+                                {{ form.preferencias_alimentarias.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col-12">
+                            {{ form.comidas_dia }}
+                            {% if form.comidas_dia.errors %}
+                            <div class="invalid-feedback">
+                                {{ form.comidas_dia.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col-12">
+                            {{ form.litros_dia }}
+                            {% if form.litros_dia.errors %}
+                            <div class="invalid-feedback">
+                                {{ form.litros_dia.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col-12">
+                            {{ form.nivel_actividad }}
+                            {% if form.nivel_actividad.errors %}
+                            <div class="invalid-feedback">
+                                {{ form.nivel_actividad.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 3 -->
+                <h4>Confirmación</h4>
+                <section>
+                    <div class="text-center">
+                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2" width="100" height="100">
+                            <circle class="path circle" fill="none" stroke="#73AF55" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
+                            <polyline class="path check" fill="none" stroke="#73AF55" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5"/>
+                        </svg>
+                        <p class="success">¡Eso era todo, hemos actualizado las preferencias!</p>
+                    </div>
+                </section>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-steps/1.1.0/jquery.steps.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        $(function(){
+            $("#wizard").steps({
+                headerTag: "h4",
+                bodyTag: "section",
+                transitionEffect: "fade",
+                enableAllSteps: true,
+                transitionEffectSpeed: 500,
+                labels: {
+                    finish: "Vamos a chatear",
+                    next: "Siguiente",
+                    previous: "Anterior"
+                },
+                onStepChanging: function (event, currentIndex, newIndex) { 
+                    if (currentIndex > newIndex) {
+                        return true;
+                    }
+                    
+                    var form = $(this).closest('form');
+                    var currentSection = $(this).find('section:eq(' + currentIndex + ')');
+                    var inputs = currentSection.find(':input');
+                    var valid = true;
+                    
+                    inputs.each(function() {
+                        if (!this.checkValidity()) {
+                            valid = false;
+                            $(this).addClass('is-invalid');
+                        } else {
+                            $(this).removeClass('is-invalid');
+                        }
+                    });
+
+                    if (!valid) {
+                        return false;
+                    }
+
+                    if (newIndex === 2) {
+                        form.submit();
+                    }
+
+                    return true;
+                },
+                onFinishing: function (event, currentIndex) {
+                    var form = $(this).closest('form');
+                    form.submit();
+                    return true;
+                }
+            });
+
+            $('.wizard > .steps li a').click(function(){
+                $(this).parent().addClass('checked');
+                $(this).parent().prevAll().addClass('checked');
+                $(this).parent().nextAll().removeClass('checked');
+            });
+
+            // Style form controls
+            $('select').addClass('form-control');
+            $('input').addClass('form-control');
+        });
+    </script>
+</body>
+</html>

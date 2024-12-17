@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+{% load static %}
+<div class="container mx-auto px-6 py-8">
+    <!-- Greeting and Challenge Section -->
+    <div class="flex justify-between items-start mb-8">
+        <h1 class="text-3xl font-semibold text-gray-800">
+            Hola {{ user.username }} 🌱
+        </h1>
+    </div>
+    
+    <!-- Alertas -->
+    {% if messages %}
+        <div class="mb-4">
+            {% for message in messages %}
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-2" role="alert">
+                    <span class="block sm:inline">{{ message }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <!-- Daily Activity -->
+    <div class="bg-white rounded-lg shadow p-6 mb-6">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold">Actividad diaria</h2>
+            <img src="{% static 'img/daily.jpg' %}" alt="Daily Activity" class="h-6">
+        </div>
+        <p class="text-gray-600 mb-3">{{ totales.calorias|default:0 }} Calorías consumidas - {{ porcentaje_calorias|floatformat:0 }}% de la meta diaria de {{calorias_diarias}} </p>
+        <div class="w-full bg-gray-200 rounded-full h-2.5">
+            <div class="bg-green-600 h-2.5 rounded-full progress-bar" style="width: {{ porcentaje_calorias }}%"></div>
+        </div>
+    </div>
+
+    <!-- Daily Stats Grid -->
+    <div class="grid md:grid-cols-2 gap-6 mb-6">
+        <!-- Daily Recap -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center mb-4">
+                <img src="{% static 'img/recap.jpg' %}" alt="Daily Recap" class="h-6 mr-3">
+                <h2 class="text-xl font-bold">Recapitulación del día</h2>
+            </div>
+            <ul class="space-y-3">
+                <li class="flex items-center justify-between">
+                    <span>Carbohidratos</span>
+                    <span class="font-semibold">{{ totales.carbohidratos|default:0 }}g - {{ porcentaje_carbohidratos|floatformat:0 }}%</span>
+                </li>
+                <li class="flex items-center justify-between">
+                    <span>Proteínas</span>
+                    <span class="font-semibold">{{ totales.proteinas|default:0 }}g - {{ porcentaje_proteinas|floatformat:0 }}%</span>
+                </li>
+                <li class="flex items-center justify-between">
+                    <span>Grasas</span>
+                    <span class="font-semibold">{{ totales.grasas|default:0 }}g - {{ porcentaje_grasas|floatformat:0 }}%</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Daily Calories -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center mb-4">
+                <img src="{% static 'img/daily2.jpg' %}" alt="Daily Calories" class="h-6 mr-3">
+                <h2 class="text-xl font-bold">Calorías diarias</h2>
+            </div>
+            <div class="space-y-4 max-h-96 overflow-y-auto">
+                {% for comida in comidas_diarias %}
+                <div class="flex justify-between items-center py-2 border-b last:border-0">
+                    <span>{{ comida.get_tipo_comida_display }}: {{ comida.nombre }}</span>
+                    <span class="font-semibold">{{ comida.calorias }} Kcal</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Water Intake -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-bold mb-4">Vasos de agua restantes {{ metas.vasos_agua }}</h2>
+        
+        <div class="text-sm text-gray-500 mt-2">
+            <form method="post" action="{% url 'dieta:registrar_agua' %}">
+                {% csrf_token %}
+                <button type="submit" name="sumar" class="bg-blue-500 text-white px-4 py-2 rounded-lg mt-4">Agregar vaso</button>
+                <button type="submit" name="restar" class="bg-red-500 text-white px-4 py-2 rounded-lg mt-4">Restar vaso</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

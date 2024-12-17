@@ -1,0 +1,311 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dashboard Nutricional{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .progress-bar {
+            transition: width 0.5s ease-in-out;
+        }
+        .chat-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        .chat-container {
+            display: none;
+            flex-direction: column;
+            width: 300px;
+            max-height: 400px;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .chat-container.visible {
+            display: flex;
+        }
+        .chat-container .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+        }
+        .chat-container .chat-messages {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+        }
+        .chat-container .chat-input-container {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #ccc;
+        }
+        .chat-container .chat-input {
+            flex: 1;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .chat-container .send-button {
+            margin-left: 10px;
+            padding: 5px 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .chat-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .chat-toggle svg {
+            width: 24px;
+            height: 24px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex flex-col md:flex-row h-screen">
+        <!-- Sidebar/Navbar -->
+        <div class="w-full md:w-64 bg-gray-900 text-white">
+            <!-- Logo/Brand -->
+            <div class="p-4">
+                <h1 class="text-xl font-semibold">Dashboard Nutricional</h1>
+            </div>
+            
+            <!-- Navigation Links -->
+            <nav class="mt-8">
+                <a href="{% url 'dieta:dashboard' %}" 
+                   class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 {% if request.resolver_match.url_name == 'dashboard' %}bg-gray-800{% endif %}">
+                    <i class="fas fa-home mr-3"></i>
+                    <span>Inicio</span>
+                </a>
+                
+                <a href="{% url 'dieta:dieta' %}" 
+                   class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 {% if request.resolver_match.url_name == 'dieta' %}bg-gray-800{% endif %}">
+                    <i class="fas fa-utensils mr-3"></i>
+                    <span>Dieta</span>
+                </a>
+                
+                <a href="{% url 'metas:metas' %}" 
+                   class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 {% if request.resolver_match.url_name == 'metas' %}bg-gray-800{% endif %}">
+                    <i class="fas fa-bullseye mr-3"></i>
+                    <span>Metas</span>
+                </a>
+
+                <a href="{% url 'logros:lista_logros' %}" 
+                   class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 {% if request.resolver_match.url_name == 'lista_logros' %}bg-gray-800{% endif %}">
+                    <i class="fas fa-trophy mr-3"></i>
+                    <span>Logros</span>
+                </a>
+
+                <a href="{% url 'info_usuarios:perfil_usuario' %}" 
+                   class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 {% if request.resolver_match.url_name == 'perfil_usuario' %}bg-gray-800{% endif %}">
+                    <i class="fas fa-user mr-3"></i>
+                    <span>Perfil</span>
+                </a>
+            </nav>
+            <div class="absolute bottom-0 w-full md:w-64 bg-gray-800">
+                <div class="flex items-center px-4 py-3">
+                    <div class="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center">
+                        <i class="fas fa-user text-sm"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-medium">{{ user.username }}</p>
+                        <p class="text-xs text-gray-500">{{ user.username }}</p>
+                        <a href="{% url 'logout' %}" class="text-red-600 hover:text-red-800">
+                            Cerrar sesión
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Main Content Area -->
+            <main class="flex-1 overflow-y-auto bg-gray-100 p-4 md:p-8">
+                {% block content %}
+                {% endblock content %}
+            </main>
+        </div>
+    </div>
+
+    <div class="chat-widget" id="chatWidget">
+        <div class="chat-container" id="chatContainer">
+            <div class="chat-header">
+                <h3 class="chat-title">Chat Assistant</h3>
+                <button class="minimize-button" id="minimizeButton">−</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot-message">
+                    <div class="message-content">
+                        Hola! ¿Como te puedo ayudar el dia de hoy?
+                    </div>
+                    <span class="timestamp">12:00 PM</span>
+                </div>
+            </div>
+            <div class="chat-input-container">
+                <input type="text" class="chat-input" id="userInput" placeholder="Type your message...">
+                <button class="send-button" id="sendButton">Send</button>
+            </div>
+        </div>
+        <button class="chat-toggle" id="chatToggle">
+            <svg class="chat-icon" viewBox="0 0 24 24">
+                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatWidget = document.getElementById('chatWidget');
+            const chatContainer = document.getElementById('chatContainer');
+            const chatToggle = document.getElementById('chatToggle');
+            const minimizeButton = document.getElementById('minimizeButton');
+            const chatMessages = document.getElementById('chatMessages');
+            const userInput = document.getElementById('userInput');
+            const sendButton = document.getElementById('sendButton');
+
+            let isMinimized = true;
+
+            function toggleChat() {
+                isMinimized = !isMinimized;
+                chatContainer.classList.toggle('visible', !isMinimized);
+                if (!isMinimized) {
+                    userInput.focus();
+                }
+            }
+
+            function addMessage(message, isUser = false) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+
+                const messageContent = document.createElement('div');
+                messageContent.className = 'message-content';
+                messageContent.textContent = message;
+
+                const timestamp = document.createElement('span');
+                timestamp.className = 'timestamp';
+                timestamp.textContent = new Date().toLocaleTimeString('en-US', { 
+                    hour: 'numeric', 
+                    minute: '2-digit'
+                });
+
+                messageDiv.appendChild(messageContent);
+                messageDiv.appendChild(timestamp);
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function showTypingIndicator() {
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'message bot-message';
+                typingDiv.id = 'typingIndicator';
+                
+                const typingContent = document.createElement('div');
+                typingContent.className = 'typing-indicator';
+                
+                for (let i = 0; i < 3; i++) {
+                    const dot = document.createElement('div');
+                    dot.className = 'typing-dot';
+                    typingContent.appendChild(dot);
+                }
+                
+                typingDiv.appendChild(typingContent);
+                chatMessages.appendChild(typingDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function removeTypingIndicator() {
+                const typingIndicator = document.getElementById('typingIndicator');
+                if (typingIndicator) {
+                    typingIndicator.remove();
+                }
+            }
+
+            async function sendMessage() {
+                const message = userInput.value.trim();
+                if (message) {
+                    addMessage(message, true);
+                    userInput.value = '';
+                    showTypingIndicator();
+
+                    try {
+                        const response = await fetch('{% url "chatbot:chat_message" %}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': getCookie('csrftoken')
+                            },
+                            body: JSON.stringify({ message: message })
+                        });
+
+                        if (response.ok) {
+                            removeTypingIndicator();
+                            const data = await response.json();
+                            addMessage(data.response);
+                        } else {
+                            throw new Error('Failed to get response');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        addMessage('Sorry, I encountered an error. Please try again later.');
+                    }
+                }
+            }
+
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+            // Event listeners
+            chatToggle.addEventListener('click', toggleChat);
+            minimizeButton.addEventListener('click', toggleChat);
+            sendButton.addEventListener('click', sendMessage);
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+
+            // Optional: Close chat when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!chatWidget.contains(e.target) && !isMinimized) {
+                    toggleChat();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

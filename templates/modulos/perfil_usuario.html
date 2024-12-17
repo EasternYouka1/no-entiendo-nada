@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h2 class="text-2xl font-bold mb-6">Perfil del Usuario</h2>
+    <div class="bg-white rounded-lg shadow p-6">
+        <h3 class="text-xl font-semibold mb-4">Indicadores</h3>
+        <p><strong>IMC:</strong> {{ imc|floatformat:2 }}</p>
+        <p><strong>Edad:</strong> {{ user_info.edad }}</p>
+        <p><strong>Peso:</strong> {{ user_info.peso }} kg</p>
+        <p><strong>Altura:</strong> {{ user_info.altura }} cm</p>
+        <p><strong>Nivel de Actividad:</strong> 
+            {% if user_info.nivel_actividad == 1 %}
+                Sedentario
+            {% elif user_info.nivel_actividad == 2 %}
+                Moderado
+            {% elif user_info.nivel_actividad == 3 %}
+                Activo
+            {% endif %}
+        </p>
+        <p><strong>Género:</strong> {{ user_info.genero }}</p>
+        <p><strong>Litros de Agua por Día:</strong> {{ user_info.litros_dia }}</p>
+        <p><strong>Comidas por Día:</strong> {{ user_info.comidas_dia }}</p>
+        <p><strong>Preferencias Alimentarias:</strong> 
+            {% if user_info.preferencias_alimentarias == "1" %}
+                Vegetarianos
+            {% elif user_info.preferencias_alimentarias == "2" %}
+                Vegano
+            {% elif user_info.preferencias_alimentarias == "3" %}
+                Gluten-free
+            {% elif user_info.preferencias_alimentarias == "4" %}
+                Lactosa
+            {% elif user_info.preferencias_alimentarias == "5" %}
+                Ninguna
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6 mt-6">
+        <h3 class="text-xl font-semibold mb-4">Actualizar Datos Personales</h3>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">
+                Actualizar
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

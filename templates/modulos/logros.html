@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="grid md:grid-cols-2 gap-8">
+        <!-- Logros obtenidos -->
+        <div>
+            <h2 class="text-2xl font-bold mb-6">Logros Obtenidos 🏆</h2>
+            <div class="bg-white rounded-lg shadow p-6">
+                {% if logros_obtenidos %}
+                    <div class="space-y-4">
+                        {% for logro in logros_obtenidos %}
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                <div class="flex items-center">
+                                    <img src="{{ logro.imagen.url }}" alt="{{ logro.nombre }}" class="w-16 h-16 rounded-full mr-4">
+                                    <div>
+                                        <h3 class="font-medium">{{ logro.nombre }}</h3>
+                                        <p class="text-sm text-gray-600">{{ logro.descripcion }}</p>
+                                        <p class="text-xs text-gray-500">{{ logro.como_obtener }}</p>
+                                    </div>
+                                </div>
+                                <div class="text-green-600 font-bold">
+                                    {{ logro.puntos }} pts
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="mt-6 pt-6 border-t">
+                        <h4 class="font-medium mb-2">Puntos Totales:</h4>
+                        <p class="text-xl font-bold text-green-600">{{ puntos_totales }} pts</p>
+                    </div>
+                {% else %}
+                    <p class="text-gray-500 text-center py-4">
+                        No has obtenido logros aún
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Logros restantes -->
+        <div>
+            <h2 class="text-2xl font-bold mb-6">Logros Restantes 🎯</h2>
+            <div class="bg-white rounded-lg shadow p-6">
+                {% if logros_restantes %}
+                    <div class="space-y-4">
+                        {% for logro in logros_restantes %}
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                <div class="flex items-center">
+                                    <img src="{{ logro.imagen.url }}" alt="{{ logro.nombre }}" class="w-16 h-16 rounded-full mr-4">
+                                    <div>
+                                        <h3 class="font-medium">{{ logro.nombre }}</h3>
+                                        <p class="text-sm text-gray-600">{{ logro.descripcion }}</p>
+                                        <p class="text-xs text-gray-500">{{ logro.como_obtener }}</p>
+                                    </div>
+                                </div>
+                                <div class="text-green-600 font-bold">
+                                    {{ logro.puntos }} pts
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-gray-500 text-center py-4">
+                        No tienes logros restantes
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

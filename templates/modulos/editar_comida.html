@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-xl mx-auto">
+        <h1 class="text-2xl font-bold mb-6">Editar Comida</h1>
+        
+        <div class="bg-white rounded-lg shadow p-6">
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Nombre de la comida
+                    </label>
+                    {{ form.nombre }}
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Tipo de comida
+                    </label>
+                    {{ form.tipo_comida }}
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Calorías
+                    </label>
+                    {{ form.calorias }}
+                </div>
+                
+                <div class="grid grid-cols-3 gap-4 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Carbohidratos (g)
+                        </label>
+                        {{ form.carbohidratos }}
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Proteínas (g)
+                        </label>
+                        {{ form.proteinas }}
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Grasas (g)
+                        </label>
+                        {{ form.grasas }}
+                    </div>
+                </div>
+                
+                <div class="flex space-x-4">
+                    <button type="submit" class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+                        Guardar Cambios
+                    </button>
+                    <a href="{% url 'dieta:dieta' %}" class="flex-1 bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors text-center">
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

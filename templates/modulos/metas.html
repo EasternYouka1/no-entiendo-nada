@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-2xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8">Mis Metas Nutricionales 🎯</h1>
+        
+        <div class="bg-white rounded-lg shadow p-6">
+            <form method="POST">
+                {% csrf_token %}
+                
+                <!-- Daily Calories -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Calorías Diarias
+                    </label>
+                    {{ form.calorias_diarias }}
+                </div>
+                
+                <!-- Macronutrients -->
+                <div class="grid grid-cols-3 gap-4 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Carbohidratos (g)
+                        </label>
+                        {{ form.carbohidratos_diarios }}
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Proteínas (g)
+                        </label>
+                        {{ form.proteinas_diarias }}
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Grasas (g)
+                        </label>
+                        {{ form.grasas_diarias }}
+                    </div>
+                </div>
+                
+                <!-- Water Intake -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Vasos de Agua Diarios
+                    </label>
+                    {{ form.vasos_agua }}
+                </div>
+                
+                <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+                    Guardar Metas
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

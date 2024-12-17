@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="shadow-wrap">
+ <div class="form-wrap">
+  <h3>Inicio de sesion </h3>
+<form method="POST">
+<!– aca es donde se pasa el formulario esto va segun la petcion realizada -->
+ {% csrf_token %}
+ {{form}}
+ <button type="submit">Enviar</button>
+</form>
+<a class="signup-link" href="{% url "login:authView" %}">Crear cuenta</a>
+</div>
+</div>
+{% endblock content %}a
